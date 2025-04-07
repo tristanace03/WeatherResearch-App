@@ -6,6 +6,14 @@ public class WeatherData{
   private double windSpeed;
   private String condition;
 
+  public WeatherData(double temperature, double humidity, double windSpeed, String condition){
+    this.temperature = temperature;
+    this.humidity = humidity;
+    this.windSpeed = windSpeed;
+    this.condition = condition;
+  }
+
+
   /**
    * Method to Format and override the toString() Method
    * 
