@@ -1,0 +1,30 @@
+# Ignore compiled Java class files
+*.class
+
+# Ignore SQLite database file
+*.db
+
+# Ignore log files
+*.log
+
+# Ignore VSCode workspace settings (but NOT launch.json or settings.json)
+.vscode/*.code-workspace
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore backup files
+*~
+*.swp
+
+# Ignore build output (if using Maven/Gradle)
+target/
+bin/
+build/
+
+# Ignore temporary or generated files
+*.tmp
+
+# Keep your JDBC jar in /lib
+!lib/*.jar
