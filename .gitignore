@@ -7,6 +7,9 @@
 # Ignore log files
 *.log
 
+# Ignore csv files
+*.csv
+
 # Ignore VSCode workspace settings (but NOT launch.json or settings.json)
 .vscode/*.code-workspace
 
