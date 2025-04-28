@@ -19,6 +19,7 @@ public class WeatherResearchApp{
    */
   public static void run(){
 
+    WeatherController controller = new WeatherController(new DatabaseManager(), new UserManager(), new ESPNScores());
     Scanner scan = new Scanner(System.in);
 
     boolean running = true;
@@ -28,6 +29,7 @@ public class WeatherResearchApp{
 
     while(running!=false){
 
+      System.out.println();
       System.out.println("Options:\n" +
       "0: Exit\n" + 
       "1: View the weather by location\n" +
@@ -124,8 +126,8 @@ public class WeatherResearchApp{
       else if(choice == 17){
         // Call to unfavorite a location
       }
-      else if(choice ==18){
-        // Call to retrieve ESPN scores
+      else if(choice == 18){
+        controller.getESPNScores();
       }
       else if(choice == 19){
         // Call to Retrieve Mesoscale Discussions
@@ -135,6 +137,7 @@ public class WeatherResearchApp{
       }
 
       choice = -1;
+      System.out.println();
 
     }
 
