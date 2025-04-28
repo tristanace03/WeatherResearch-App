@@ -36,7 +36,6 @@ public class WeatherController{
 
   public void getESPNScores(){
 
-
     Scanner scan = new Scanner(System.in);
     int choice = 0;
 
@@ -57,11 +56,12 @@ public class WeatherController{
       }
     }
     
-
     if(choice == 1){
+      System.out.println("Here are the current MLB Scores for Today:");
       espnScores.getScores("baseball", "mlb");
     }
     else if(choice == 2){
+      System.out.println("Here are the current NBA Scores for Today:");
       espnScores.getScores("basketball", "nba");
     }
     

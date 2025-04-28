@@ -142,6 +142,7 @@ public class WeatherResearchApp{
     }
 
     scan.close();
+    System.out.println("Thank you!");
   }
 
 }
