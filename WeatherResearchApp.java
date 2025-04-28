@@ -53,7 +53,7 @@ public class WeatherResearchApp{
       // System.out.print("Please enter a number for the choice you want: ");
 
       while(choice < 0 || choice > 20){
-        System.out.print("Please enter a number between 0 and 20 :");
+        System.out.print("Please enter a number between 0 and 20: ");
         if(scan.hasNextInt()){
           choice = scan.nextInt();
           if(choice >=0 && choice <= 20){
