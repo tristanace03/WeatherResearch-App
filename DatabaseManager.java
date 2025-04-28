@@ -1,3 +1,5 @@
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.*;
 
 public class DatabaseManager extends AbstractDatabaseManager{
@@ -82,8 +84,39 @@ public class DatabaseManager extends AbstractDatabaseManager{
     }
 
      /*
-      * Method to export to a CSV or a PDF
+      * Method to export to a CSV file
       */
+      public void exportToCSV(){
+        String sql = "SELECT * FROM logs";
+        try (PreparedStatement pstmt = DatabaseHelper.getInstance().getConnection().prepareStatement(sql); FileWriter csvWriter = new FileWriter("logs.csv");) {
+            ResultSet rs = pstmt.executeQuery();
+            
+          int columnCount = rs.getMetaData().getColumnCount();
+          for(int i = 1; i <= columnCount; i++){
+            csvWriter.append(rs.getMetaData().getColumnName(i));
+            if(i < columnCount){
+              csvWriter.append(",");
+            }
+          }
+          csvWriter.append("\n");
+
+          while(rs.next()){
+            for(int i = 1; i <= columnCount; i++){
+              csvWriter.append(rs.getString(i));
+              if(i < columnCount){
+                csvWriter.append(",");
+              }
+            }
+            csvWriter.append("\n");
+          }
+        } catch (SQLException e) {
+            System.out.println("Error exporting to CSV: " + e.getMessage());
+        }
+        catch (IOException e) {
+            System.out.println("Error writing to CSV file: " + e.getMessage());
+        }
+      }
+    
 }
 
 
