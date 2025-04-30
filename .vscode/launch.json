@@ -1,0 +1,12 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Launch WeatherResearchApp",
+      "request": "launch",
+      "mainClass": "WeatherResearchApp",
+      "vmArgs": "-cp .;lib/sqlite-jdbc-3.49.1.0.jar"
+    }
+  ]
+}
