@@ -17,14 +17,13 @@ public class DatabaseManager extends AbstractDatabaseManager{
   
   /*
    * Save Preferences to the database
-   * Also need a Preference class for this
    */
-  public void savePreference(String key, String value) {
-    String sql = "REPLACE INTO preferences() VALUES()";
-
+  public void savePreference(String username, String key, String value) {
+    String sql = "REPLACE INTO preferences(username, key, value) VALUES (?, ?, ?)";
     try (PreparedStatement pstmt = DatabaseHelper.getInstance().getConnection().prepareStatement(sql)) {
-
-
+        pstmt.setString(1, username);
+        pstmt.setString(2, key);
+        pstmt.setString(3, value);
         pstmt.executeUpdate();
     } catch (SQLException e) {
         System.out.println("Save preference error: " + e.getMessage());
@@ -34,10 +33,11 @@ public class DatabaseManager extends AbstractDatabaseManager{
   /*
    * Get Preferences from the database
    */
-  public String getPreference(String key) {
-    String sql = "SELECT value FROM preferences WHERE key = ?";
+  public String getPreference(String username, String key) {
+    String sql = "SELECT value FROM preferences WHERE username = ? AND key = ?";
     try (PreparedStatement pstmt = DatabaseHelper.getInstance().getConnection().prepareStatement(sql)) {
-        pstmt.setString(1, key);
+        pstmt.setString(1, username);
+        pstmt.setString(2, key);
         ResultSet rs = pstmt.executeQuery();
         if (rs.next()) {
             return rs.getString("value");
@@ -46,7 +46,7 @@ public class DatabaseManager extends AbstractDatabaseManager{
         System.out.println("Get preference error: " + e.getMessage());
     }
     return null;
-  }
+}
 
   public boolean logObservation(Observation obs){
     String sql = "INSERT INTO logs(location, timestamp, notes, temperature) VALUES (?, ?, ?, ?)";
@@ -69,10 +69,10 @@ public class DatabaseManager extends AbstractDatabaseManager{
     /*
      * Method to search the logbook entries
      */
-    public Observation searchLogs(Date timestamp){
-        String sql = "SELECT * FROM logs WHERE timestamp = ?";
+    public Observation searchLogs(String location){
+        String sql = "SELECT * FROM logs WHERE location = ?";
         try (PreparedStatement pstmt = DatabaseHelper.getInstance().getConnection().prepareStatement(sql)) {
-            pstmt.setDate(1, timestamp);
+            pstmt.setString(1, location);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 return new Observation(rs.getString("location"), rs.getDate("timestamp"), rs.getString("notes"), rs.getDouble("temperature"));
@@ -114,6 +114,18 @@ public class DatabaseManager extends AbstractDatabaseManager{
         }
         catch (IOException e) {
             System.out.println("Error writing to CSV file: " + e.getMessage());
+        }
+      }
+
+      @Override
+      public void saveUser(User user) {
+        String sql = "INSERT INTO users(username, password) VALUES (?, ?)";
+        try (PreparedStatement pstmt = DatabaseHelper.getInstance().getConnection().prepareStatement(sql)) {
+            pstmt.setString(1, user.getUsername());
+            pstmt.setString(2, user.getPassword());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error saving user: " + e.getMessage());
         }
       }
     

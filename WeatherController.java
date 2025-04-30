@@ -31,8 +31,21 @@ public class WeatherController{
   // public getUserPreferences{
   // }
 
-  // public getWeatherData{
-  // }
+  public void shareWeatherData(String to){
+    WeatherService weatherService = new WeatherService();
+    weatherService.shareWeatherData(to);
+  }
+
+  public void exportLogbookData(){
+    SQLiteDatabaseFactory dbFactory = new SQLiteDatabaseFactory();
+    dbFactory.createDatabaseManager("SQLLite").exportToCSV();
+    System.out.println("Logbook data exported to CSV file.");
+  }
+
+  public void getWeatherData(String location){
+    WeatherService weatherService = new WeatherService();
+    weatherService.getRealTimeWeather(location);
+  }
 
   public void getESPNScores(){
 

@@ -77,6 +77,9 @@ public class WeatherResearchApp{
       }
       else if(choice==1){
         //Call to Retrieve weather by location
+        System.out.print("Please enter a location: ");
+        String location = scan.next();
+        controller.getWeatherData(location);
       }
       else if(choice ==2){
         // Call for viewing Radar Visualization
@@ -98,6 +101,7 @@ public class WeatherResearchApp{
       }
       else if(choice == 8){
         // Call to export Logbook Data
+        controller.exportLogbookData();
       }
       else if(choice == 9){
         // Call to search for Historical logbook Entries
@@ -107,6 +111,9 @@ public class WeatherResearchApp{
       }
       else if(choice == 11){
         // Call to share weather data
+        System.out.print("Please enter the email address to share the weather data: ");
+        String email = scan.next();
+        controller.shareWeatherData(email);
       }
       else if(choice == 12){
         // Call to see the current news
