@@ -4,5 +4,6 @@
       "lib/gson-2.13.1.jar",
       "lib/jakarta.mail-2.0.1.jar",
       "lib/jakarta.activation-2.0.1.jar",
+      "lib/json-20140107.jar"
     ]
   }

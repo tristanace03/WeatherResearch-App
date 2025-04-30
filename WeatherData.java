@@ -1,26 +1,43 @@
-public class WeatherData{
-  //represents the real time weather data (temp, humidity, etc.)
+public class WeatherData {
+  private String type;
+  private String time;
+  private int temperature;
+  private String description;
+  private int precipitationChance;
+  private String severity;
 
-  private double temperature;
-  private double humidity;
-  private double windSpeed;
-  private String condition;
-
-  public WeatherData(double temperature, double humidity, double windSpeed, String condition){
-    this.temperature = temperature;
-    this.humidity = humidity;
-    this.windSpeed = windSpeed;
-    this.condition = condition;
+  public WeatherData(String type, String time, int temperature, String description, int precipitationChance, String severity) {
+      this.type = type;
+      this.time = time;
+      this.temperature = temperature;
+      this.description = description;
+      this.precipitationChance = precipitationChance;
+      this.severity = severity;
   }
 
-
-  /**
-   * Method to Format and override the toString() Method
-   * 
-   * @return String
-   */
-  @Override
-  public String toString(){
-    return "Temperature: " + this.temperature + ", Humidity: " + this.humidity + ", Wind Speed: " + this.windSpeed + ", Condition: " + this.condition;
+  public String getType() {
+      return type;
   }
+
+  public String getTime() {
+      return time;
+  }
+
+  public int getTemperature() {
+      return temperature;
+  }
+
+  public String getDescription() {
+      return description;
+  }
+
+  public int getPrecipitationChance() {
+      return precipitationChance;
+  }
+
+  public String getSeverity() {
+      return severity;
+  }
+
 }
+

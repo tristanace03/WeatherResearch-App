@@ -2,12 +2,16 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.Scanner;
+import org.json.*;
 
 
 public class WeatherResearchApp{
   //main class for application
+  private static final String NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org/search";
+    private static final String USER_AGENT = "WeatherResearchApp/1.0 (tristanace2@gmail.com)";
   public static void main(String[] args){
 
     run();
@@ -19,7 +23,13 @@ public class WeatherResearchApp{
    */
   public static void run(){
 
-    WeatherController controller = new WeatherController(new DatabaseManager(), new UserManager(), new ESPNScores());
+    //WeatherController controller = new WeatherController(new DatabaseManager(), new UserManager(), new ESPNScores());
+    SQLiteDatabaseFactory dbFactory = new SQLiteDatabaseFactory();
+            DatabaseManager dbManager = (DatabaseManager) dbFactory.createDatabaseManager("SQLite");
+            UserManager userManager = new UserManager();
+            ESPNScores espnScores = new ESPNScores();
+            WeatherDataSource weatherSource = WeatherDataSourceFactory.createWeatherDataSource("NOAA");
+            WeatherController controller = new WeatherController(dbManager, userManager, espnScores, weatherSource);
     Scanner scan = new Scanner(System.in);
 
     boolean running = true;
@@ -71,15 +81,20 @@ public class WeatherResearchApp{
           System.out.println(invalid + " is not a valid input");
         }
       }
+      scan.nextLine(); // Clear newline after nextInt()
       if(choice ==0){
         // Exit
         running = false;
       }
       else if(choice==1){
-        //Call to Retrieve weather by location
-        System.out.print("Please enter a location: ");
-        String location = scan.next();
-        controller.getWeatherData(location);
+        System.out.print("Enter a ZIP code: ");
+                    String zip = scan.nextLine().trim();
+                    Location location = getCoordinatesFromZIP(zip);
+                    if (location != null) {
+                        System.out.println("\nLocation: " + location);
+                        String weatherInfo = controller.getWeatherByLocation(location);
+                        System.out.println(weatherInfo);
+                    }
       }
       else if(choice ==2){
         // Call for viewing Radar Visualization
@@ -94,7 +109,14 @@ public class WeatherResearchApp{
         // Call to set a Favorite Location
       }
       else if(choice == 6){
-        // Call to view recent weather alerts
+        System.out.print("Enter a ZIP code: ");
+        String zip = scan.nextLine().trim();
+        Location location = getCoordinatesFromZIP(zip);
+        if (location != null) {
+            System.out.println("\nLocation: " + location);
+            String alertsInfo = controller.getAlerts(location);
+            System.out.println(alertsInfo);
+        }
       }
       else if(choice == 7){
         // Call to set weather preferences
@@ -107,7 +129,15 @@ public class WeatherResearchApp{
         // Call to search for Historical logbook Entries
       }
       else if(choice == 10){
-        // Call to view multi day forecasts 
+       
+        System.out.print("Enter a ZIP code: ");
+        String zip = scan.nextLine().trim();
+        Location location = getCoordinatesFromZIP(zip);
+        if (location != null) {
+            System.out.println("\nLocation: " + location);
+            String forecastInfo = controller.getMultidayForecast(location);
+            System.out.println(forecastInfo);
+        } 
       }
       else if(choice == 11){
         // Call to share weather data
@@ -151,5 +181,52 @@ public class WeatherResearchApp{
     scan.close();
     System.out.println("Thank you!");
   }
+  private static Location getCoordinatesFromZIP(String zip) {
+    try {
+        String url = NOMINATIM_BASE_URL + "?postalcode=" + URLEncoder.encode(zip, "UTF-8") + "&country=USA&format=json&addressdetails=1";
+        String response = getString(url);
+        JSONArray jsonArray = new JSONArray(response);
+        if (jsonArray.length() == 0) {
+            System.out.println("Invalid ZIP code or no data found.");
+            return null;
+        }
+
+        JSONObject result = jsonArray.getJSONObject(0);
+        double lat = result.getDouble("lat");
+        double lon = result.getDouble("lon");
+        JSONObject address = result.getJSONObject("address");
+        String state = address.optString("state", "Unknown");
+
+        String town = address.optString("town", "");
+        if (town.isEmpty()) {
+            town = address.optString("city", "");
+        }
+        if (town.isEmpty()) {
+            town = address.optString("village", "");
+        }
+        if (town.isEmpty()) {
+            town = address.optString("hamlet", "");
+        }
+
+        return new Location(lat, lon, state, town);
+    } catch (Exception e) {
+        System.err.println("Error geocoding ZIP: " + e.getMessage());
+        return null;
+    }
+}
+
+private static String getString(String urlStr) throws Exception {
+    HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
+    conn.setRequestProperty("User-Agent", USER_AGENT);
+
+    try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+        StringBuilder sb = new StringBuilder();
+        String inputLine;
+        while ((inputLine = in.readLine()) != null) {
+            sb.append(inputLine);
+        }
+        return sb.toString();
+    }
+}
 
 }
