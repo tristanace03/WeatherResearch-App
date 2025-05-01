@@ -194,4 +194,35 @@ public String getMultidayForecast(Location location) {
         e.printStackTrace();
     }
   }
+
+
+
+
+  public void saveObservation(Location location) {
+    // Get structured forecast text for the log
+    String notes = getWeatherByLocation(location);
+
+    // Get forecast point data
+    WeatherDataSource.PointData pointData = weatherSource.getPointData(location);
+    double temperature = 0.0;
+
+    if (pointData != null) {
+        JSONArray hourlyForecast = weatherSource.getHourlyForecast(pointData.hourlyForecastUrl);
+        if (hourlyForecast != null && hourlyForecast.length() > 0) {
+            JSONObject firstHour = hourlyForecast.getJSONObject(0);
+            WeatherData data = weatherDataFactory.createWeatherData(firstHour, "hourly");
+            temperature = data.getTemperature();
+        }
+    }
+    
+    Observation obs = new Observation(
+        location.toString(),
+        new java.util.Date(),
+        notes,
+        temperature
+    );
+
+    DatabaseManager dbManager = new DatabaseManager();
+    dbManager.logObservation(obs);
+  }
 }

@@ -39,8 +39,10 @@ public String getMultidayForecast(Location location) {
   // public getObservation{
   // }
 
-  // public saveObservation{
-  // }
+  public void saveObservation(Location location){
+    WeatherService weatherService = new WeatherService(weatherSource, weatherDataFactory);
+    weatherService.saveObservation(location);
+  }
 
   // public queryObservations{
   // }

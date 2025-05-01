@@ -101,6 +101,10 @@ public class WeatherResearchApp{
       }
       else if(choice == 3){
         // Call to log weather observations
+        System.out.print("Enter a ZIP code: ");
+        String zip = scan.nextLine().trim();
+        Location location = getCoordinatesFromZIP(zip);
+        controller.saveObservation(location);
       }
       else if(choice == 4){
         // Call to view Heat Map of Logbook Locations
