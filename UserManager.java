@@ -7,7 +7,6 @@ import java.util.Map;
 public class UserManager{
   //handles login, preferenecs and favorite locations 
 
-  private DatabaseManager databaseManager;
 
   /**
    * Method to handle a user login, takes in a username and password

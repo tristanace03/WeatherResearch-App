@@ -143,7 +143,10 @@ public class WeatherResearchApp{
         // Call to share weather data
         System.out.print("Please enter the email address to share the weather data: ");
         String email = scan.next();
-        controller.shareWeatherData(email);
+        System.out.print("Enter a ZIP code of location to share: ");
+        String zip = scan.nextLine().trim();
+        Location location = getCoordinatesFromZIP(zip);
+        controller.shareWeatherData(email, location);
       }
       else if(choice == 12){
         // Call to see the current news
