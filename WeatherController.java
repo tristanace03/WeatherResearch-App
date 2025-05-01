@@ -96,9 +96,8 @@ public String getMultidayForecast(Location location) {
     }
     
 
-
-
   }
+  
 
 }
 

@@ -54,13 +54,13 @@ public class WeatherResearchApp{
       "10: View Multiday forecast\n" +
       "11: Share Weather Data\n" +
       "12: View The Current news based on a location\n" +
-      "13: Get a safe route to travel from one location to another\n" +
+      "13: Create User Login\n" +
       "14: Login into your account\n" +
       "15: Manage Weather Preferences\n" +
       "16: Suggest Activites based on the weather\n" +
       "17: Unfavorite a Location\n" +
       "18: View ESPN Scores\n" +
-      "19: View Mesoscale Discussions\n" +
+      "19: View Hourly Forecast\n" +
       "20: Compare the Weather of Two Locations");
 
       // System.out.print("Please enter a number for the choice you want: ");
@@ -156,7 +156,7 @@ public class WeatherResearchApp{
         // Call to see the current news
       }
       else if(choice == 13){
-        // Call to plan a safe route 
+        // Create User Login
       }
       else if(choice == 14){
         // Call to login to user account
@@ -174,10 +174,49 @@ public class WeatherResearchApp{
         controller.getESPNScores();
       }
       else if(choice == 19){
-        // Call to Retrieve Mesoscale Discussions
+        // Call to Retrieve Hourly Forecast
+        String weatherInfo = "";
+        System.out.print("Enter a ZIP code: ");
+        String zip = scan.nextLine().trim();
+        Location location = getCoordinatesFromZIP(zip);
+        if (location != null) {
+          System.out.println("\nLocation: " + location);
+          weatherInfo = controller.getWeatherByLocation(location);
+          // System.out.println(weatherInfo);
+      }
+
+        String[] parts = weatherInfo.split("=== Hourly Forecast ===");
+
+        if (parts.length > 1) {
+            String hourlyForecast = parts[1].trim();
+            System.out.println("Hourly Forecast:\n" + hourlyForecast);
+        } else {
+            System.out.println("Hourly forecast section not found.");
+        }
       }
       else if(choice == 20){
-        // Call to compare two locations
+        System.out.print("Enter a ZIP code for location 1: ");
+        String zip1 = scan.nextLine().trim();
+        Location location1 = getCoordinatesFromZIP(zip1);
+        
+
+        System.out.print("Enter a ZIP code for location 2: ");
+        String zip2 = scan.nextLine().trim();
+        Location location2 = getCoordinatesFromZIP(zip2);
+
+        System.out.println("Location 1: \n");
+        if (location1 != null) {
+          System.out.println("\nLocation: " + location1);
+          String weatherInfo = controller.getWeatherByLocation(location1);
+          System.out.println(weatherInfo);
+      }
+
+      System.out.println("Location 2: \n");
+      if (location2 != null) {
+        System.out.println("\nLocation: " + location2);
+        String weatherInfo = controller.getWeatherByLocation(location2);
+        System.out.println(weatherInfo);
+    }
       }
 
       choice = -1;
