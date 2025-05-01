@@ -107,7 +107,7 @@ public class WeatherService{
     if (alerts != null && alerts.length() > 0) {
         for (int i = 0; i < alerts.length(); i++) {
             JSONObject alert = alerts.getJSONObject(i).getJSONObject("properties");
-            output.append("⚠️ ").append(alert.getString("event"))
+            output.append("").append(alert.getString("event"))
                   .append(" (").append(alert.getString("severity")).append(")\n")
                   .append("Headline: ").append(alert.getString("headline")).append("\n")
                   .append("Description: ").append(alert.getString("description")).append("\n")
@@ -125,7 +125,7 @@ public class WeatherService{
     if (fireWeather != null && fireWeather.length() > 0) {
         for (int i = 0; i < fireWeather.length(); i++) {
             JSONObject alert = fireWeather.getJSONObject(i).getJSONObject("properties");
-            output.append("🔥 ").append(alert.getString("event")).append("\n")
+            output.append("").append(alert.getString("event")).append("\n")
                   .append("Headline: ").append(alert.getString("headline")).append("\n")
                   .append("Description: ").append(alert.getString("description")).append("\n")
                   .append("Effective: ").append(alert.getString("effective")).append("\n")
