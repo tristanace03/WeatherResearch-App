@@ -132,5 +132,10 @@ public String getMultidayForecast(Location location) {
     }
   }
 
+  public void getNewsByLocation(Location location) {
+    NewsService newsService = new NewsService();
+    newsService.getNewsByLocation(location);
+  }
+
 }
 

@@ -171,6 +171,13 @@ public class WeatherResearchApp{
       }
       else if(choice == 12){
         // Call to see the current news
+        System.out.print("Enter a ZIP code: ");
+        String zip = scan.nextLine().trim();
+        Location location = getCoordinatesFromZIP(zip);
+        if (location != null) {
+            System.out.println("\nLocation: " + location);
+            controller.getNewsByLocation(location);
+        }
       }
       else if(choice == 13){
         // Create User Login
