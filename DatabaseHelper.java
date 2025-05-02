@@ -34,7 +34,7 @@ public class DatabaseHelper extends AbstractDatabaseHelper{
     String logsTable = "CREATE TABLE IF NOT EXISTS logs (" +
                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                    "location TEXT NOT NULL," +
-                   "timestamp TEXT NOT NULL," +
+                   "date TEXT NOT NULL," +
                    "notes TEXT," +
                    "temperature REAL);";
     

@@ -111,6 +111,15 @@ public class WeatherResearchApp{
       }
       else if(choice == 5){
         // Call to set a Favorite Location
+        System.out.print("Enter your username: ");
+        String username = scan.nextLine().trim();
+        System.out.print("Enter the ZIP code of your favorite location: ");
+        String zip = scan.nextLine().trim();
+        Location location = getCoordinatesFromZIP(zip);
+        if (location != null) {
+            System.out.println("\nLocation: " + location);
+            controller.createFavoriteLocation(username, zip);
+        }
       }
       else if(choice == 6){
         System.out.print("Enter a ZIP code: ");
@@ -127,10 +136,18 @@ public class WeatherResearchApp{
       }
       else if(choice == 8){
         // Call to export Logbook Data
+        System.out.println("Printing logbook data to CSV file...");
         controller.exportLogbookData();
       }
       else if(choice == 9){
         // Call to search for Historical logbook Entries
+        System.out.print("Enter a ZIP code to recieve logs of: ");
+        String zip = scan.nextLine().trim();  
+        Location location = getCoordinatesFromZIP(zip);
+        if (location != null) {
+            System.out.println("\nLocation: " + location);
+            controller.getObservation(location);
+        }
       }
       else if(choice == 10){
        
@@ -157,18 +174,53 @@ public class WeatherResearchApp{
       }
       else if(choice == 13){
         // Create User Login
+        System.out.print("Please enter a username: ");
+        String username = scan.nextLine().trim();
+        String password = "";
+        String password2 = "";
+
+        while (true) {
+            System.out.print("Please enter a password: ");
+            password = scan.nextLine().trim();
+
+            System.out.print("Please enter the password again: ");
+            password2 = scan.nextLine().trim();
+
+            if (password.isEmpty() || password2.isEmpty()) {
+                System.out.println("Password cannot be empty. Please try again.");
+            } else if (!password.equals(password2)) {
+                System.out.println("Passwords do not match. Please try again.");
+            } else {
+                break;  // Passwords match and are not empty
+            }
+        }
+        controller.createUser(username, password);
       }
       else if(choice == 14){
         // Call to login to user account
+        System.out.print("Please enter your username: ");
+        String username = scan.nextLine().trim();
+        System.out.print("Please enter your password: ");
+        String password = scan.nextLine().trim();
+        controller.loginUser(username, password);
       }
       else if(choice == 15){
-        // Call to manager user preferences
+        // Call to manage user preferences
       }
       else if(choice == 16){
         // Call to suggest activites based on the weather
       }
       else if(choice == 17){
         // Call to unfavorite a location
+        System.out.print("Enter your username: ");
+        String username = scan.nextLine().trim();
+        System.out.print("Enter the ZIP code of the location to unfavorite: ");
+        String zip = scan.nextLine().trim();
+        Location location = getCoordinatesFromZIP(zip);
+        if (location != null) {
+            System.out.println("\nLocation: " + location);
+            controller.removeFavoriteLocation(username, zip);
+        }
       }
       else if(choice == 18){
         controller.getESPNScores();

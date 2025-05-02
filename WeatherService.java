@@ -195,9 +195,6 @@ public String getMultidayForecast(Location location) {
     }
   }
 
-
-
-
   public void saveObservation(Location location) {
     // Get structured forecast text for the log
     String notes = getWeatherByLocation(location);
@@ -217,12 +214,18 @@ public String getMultidayForecast(Location location) {
     
     Observation obs = new Observation(
         location.toString(),
-        new java.util.Date(),
+        new java.sql.Date(System.currentTimeMillis()),
         notes,
         temperature
     );
 
     DatabaseManager dbManager = new DatabaseManager();
     dbManager.logObservation(obs);
+  }
+
+  public Observation getObservation(Location location) {
+    // Get the most recent observation for the location
+    SQLiteDatabaseFactory dbFactory = new SQLiteDatabaseFactory();
+    return dbFactory.createDatabaseManager("SQLLite").searchLogs(location.toString());
   }
 }

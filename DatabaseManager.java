@@ -1,6 +1,8 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DatabaseManager extends AbstractDatabaseManager{
   //uses SQLite operations for storing logs and preferences 
@@ -49,11 +51,15 @@ public class DatabaseManager extends AbstractDatabaseManager{
 }
 
   public boolean logObservation(Observation obs){
-    String sql = "INSERT INTO logs(location, timestamp, notes, temperature) VALUES (?, ?, ?, ?)";
+    String sql = "INSERT INTO logs(location, date, notes, temperature) VALUES (?, ?, ?, ?)";
 
     try (PreparedStatement pstmt = DatabaseHelper.getInstance().getConnection().prepareStatement(sql)) {
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            String formattedDate = dateFormat.format(obs.getTimestamp());
+
             pstmt.setString(1, obs.getLocation());
-            pstmt.setString(2, obs.getTimestamp().toString());
+            pstmt.setString(2, formattedDate);
             pstmt.setString(3, obs.getNotes());
             pstmt.setDouble(4, obs.getTemperature());
             pstmt.executeUpdate();
@@ -75,7 +81,15 @@ public class DatabaseManager extends AbstractDatabaseManager{
             pstmt.setString(1, location);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return new Observation(rs.getString("location"), rs.getDate("timestamp"), rs.getString("notes"), rs.getDouble("temperature"));
+                try{
+                  String dateString = rs.getString("date");
+                  SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                  Date date = dateFormat.parse(dateString);
+                  return new Observation(rs.getString("location"), date, rs.getString("notes"), rs.getDouble("temperature"));
+                }
+                catch (Exception e){
+                  System.out.println("Error parsing date: " + e.getMessage());
+                }
             }
         } catch (SQLException e) {
             System.out.println("Error searching logs: " + e.getMessage());

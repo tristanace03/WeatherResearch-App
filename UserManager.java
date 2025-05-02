@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.crypto.Data;
+
 public class UserManager{
   //handles login, preferenecs and favorite locations 
 
@@ -16,7 +18,7 @@ public class UserManager{
    * @param password
    * @return boolean 
    */
-  public boolean Login(String username, String password){
+  public boolean login(String username, String password){
 
    boolean loginSuccessful = false;
 
@@ -92,6 +94,12 @@ public class UserManager{
         }  
 
         return removeSuccessful;
+    }
+
+    public void createUser(String username, String password) {
+        DatabaseManager dbManager = new DatabaseManager();
+        User user = new User(username, password);
+        dbManager.saveUser(user);
     }
 }
 

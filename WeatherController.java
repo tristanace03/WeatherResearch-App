@@ -36,8 +36,11 @@ public String getMultidayForecast(Location location) {
   // public addObservation{
   // }
 
-  // public getObservation{
-  // }
+  public void getObservation(Location location) {
+    WeatherService weatherService = new WeatherService(weatherSource, weatherDataFactory);
+    Observation observation = weatherService.getObservation(location);
+    System.out.println(observation);
+  }
 
   public void saveObservation(Location location){
     WeatherService weatherService = new WeatherService(weatherSource, weatherDataFactory);
@@ -97,7 +100,37 @@ public String getMultidayForecast(Location location) {
     
 
   }
+
+  public void createUser(String username, String password) {
+    userManager.createUser(username,password);
+  }
+
+  public void loginUser(String username, String password) {
+    if(userManager.login(username,password)){
+      System.out.println("Login successful!");
+    }
+    else{
+      System.out.println("Login failed. Please check your username and password.");
+    }
+  }
   
+  public void createFavoriteLocation(String username, String location) {
+    if(userManager.addFavoriteLocation(username, location)){
+      System.out.println("Favorite location added successfully!");
+    }
+    else{
+      System.out.println("Failed to add favorite location. Please try again.");
+    }
+  }
+
+  public void removeFavoriteLocation(String username, String location) {
+    if(userManager.removeFavoriteLocation(username, location)){
+      System.out.println("Favorite location removed successfully!");
+    }
+    else{
+      System.out.println("Failed to remove favorite location. Please try again.");
+    }
+  }
 
 }
 
