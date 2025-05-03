@@ -34,18 +34,31 @@ public class DatabaseHelper extends AbstractDatabaseHelper{
     String logsTable = "CREATE TABLE IF NOT EXISTS logs (" +
                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
                    "location TEXT NOT NULL," +
-                   "timestamp TEXT NOT NULL," +
+                   "date TEXT NOT NULL," +
                    "notes TEXT," +
                    "temperature REAL);";
     
-    String userPreferencesTable = "CREATE TABLE IF NOT EXISTS preferences (" +
-                            "key TEXT PRIMARY KEY," +
-                            "value TEXT NOT NULL);";
+   String userPreferencesTable = "CREATE TABLE IF NOT EXISTS preferences (" +
+                               "username TEXT NOT NULL," +
+                               "key TEXT NOT NULL," +
+                               "value TEXT NOT NULL," +
+                               "PRIMARY KEY (username, key));";
 
+    String usersTable = "CREATE TABLE IF NOT EXISTS users (" +
+                    "username TEXT PRIMARY KEY," +
+                    "password TEXT NOT NULL);";
+
+    String favoritesTable = "CREATE TABLE IF NOT EXISTS favorites (" +
+                    "username TEXT NOT NULL," +
+                    "location TEXT NOT NULL," +
+                    "PRIMARY KEY (username, location)," +
+                    "FOREIGN KEY (username) REFERENCES users(username));";
 
     try (Statement stmt = connection.createStatement()){
         stmt.execute(logsTable);
         stmt.execute(userPreferencesTable);
+        stmt.execute(usersTable);
+        stmt.execute(favoritesTable);
     } catch (SQLException e) {
       System.out.println("Insert error: " + e.getMessage());
     }
