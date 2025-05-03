@@ -9,13 +9,16 @@ public class WeatherController{
   private ESPNScores espnScores;
   private WeatherDataSource weatherSource;
   private WeatherDataFactory weatherDataFactory;
+  private SuggestActivities activities;
 
-  public WeatherController(DatabaseManager dm, UserManager um, ESPNScores espn, WeatherDataSource weatherSource){
+  public WeatherController(DatabaseManager dm, UserManager um, ESPNScores espn, WeatherDataSource weatherSource, SuggestActivities weatherActivities){
     this.databaseManager = dm;
     this.userManager = um;
     this.espnScores = espn;
     this.weatherSource = weatherSource;
-    this.weatherDataFactory = new WeatherDataFactory();  
+    this.weatherDataFactory = new WeatherDataFactory();
+    this.activities = weatherActivities;
+
   }
 
   public String getWeatherByLocation(Location location) {
@@ -66,6 +69,24 @@ public String getMultidayForecast(Location location) {
     dbFactory.createDatabaseManager("SQLLite").exportToCSV();
     System.out.println("Logbook data exported to CSV file.");
   }
+
+  public String getSuggestedActivity(Location location) {
+    String weatherInfo = getWeatherByLocation(location);
+    String[] parts = weatherInfo.split("=== Hourly Forecast ===");
+    if (parts.length > 1) {
+        String hourlyForecast = parts[1].trim();
+
+        String[] lines = hourlyForecast.split("\n");
+
+        if (lines.length > 0) {
+            System.out.println(lines[0]+"\n");
+        } 
+
+        return SuggestActivities.suggestActivityFromForecast(hourlyForecast);
+    } else {
+        return "Weather data unavailable.";
+    }
+}
 
   public void getESPNScores(){
 

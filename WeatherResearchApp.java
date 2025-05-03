@@ -28,8 +28,9 @@ public class WeatherResearchApp{
             DatabaseManager dbManager = (DatabaseManager) dbFactory.createDatabaseManager("SQLite");
             UserManager userManager = new UserManager();
             ESPNScores espnScores = new ESPNScores();
+            SuggestActivities activities = new SuggestActivities();
             WeatherDataSource weatherSource = WeatherDataSourceFactory.createWeatherDataSource("NOAA");
-            WeatherController controller = new WeatherController(dbManager, userManager, espnScores, weatherSource);
+            WeatherController controller = new WeatherController(dbManager, userManager, espnScores, weatherSource, activities);
     Scanner scan = new Scanner(System.in);
 
     boolean running = true;
@@ -88,17 +89,21 @@ public class WeatherResearchApp{
       }
       else if(choice==1){
         System.out.print("Enter a ZIP code: ");
-                    String zip = scan.nextLine().trim();
-                    Location location = getCoordinatesFromZIP(zip);
-                    if (location != null) {
-                        System.out.println("\nLocation: " + location);
-                        String weatherInfo = controller.getWeatherByLocation(location);
-                        System.out.println(weatherInfo);
-                    }
+        String zip = scan.nextLine().trim();
+        Location location = getCoordinatesFromZIP(zip);
+        if (location != null) {
+            System.out.println("\nLocation: " + location);
+            String weatherInfo = controller.getWeatherByLocation(location);
+            System.out.println(weatherInfo);
+        }
       }
+
+
       else if(choice ==2){
         // Call for viewing Radar Visualization
       }
+
+
       else if(choice == 3){
         // Call to log weather observations
         System.out.print("Enter a ZIP code: ");
@@ -106,9 +111,13 @@ public class WeatherResearchApp{
         Location location = getCoordinatesFromZIP(zip);
         controller.saveObservation(location);
       }
+
+
       else if(choice == 4){
         // Call to view Heat Map of Logbook Locations
       }
+
+
       else if(choice == 5){
         // Call to set a Favorite Location
         System.out.print("Enter your username: ");
@@ -121,6 +130,8 @@ public class WeatherResearchApp{
             controller.createFavoriteLocation(username, zip);
         }
       }
+
+
       else if(choice == 6){
         System.out.print("Enter a ZIP code: ");
         String zip = scan.nextLine().trim();
@@ -131,14 +142,20 @@ public class WeatherResearchApp{
             System.out.println(alertsInfo);
         }
       }
+
+
       else if(choice == 7){
         // Call to set weather preferences
       }
+
+
       else if(choice == 8){
         // Call to export Logbook Data
         System.out.println("Printing logbook data to CSV file...");
         controller.exportLogbookData();
       }
+
+
       else if(choice == 9){
         // Call to search for Historical logbook Entries
         System.out.print("Enter a ZIP code to recieve logs of: ");
@@ -149,6 +166,8 @@ public class WeatherResearchApp{
             controller.getObservation(location);
         }
       }
+
+
       else if(choice == 10){
        
         System.out.print("Enter a ZIP code: ");
@@ -160,6 +179,8 @@ public class WeatherResearchApp{
             System.out.println(forecastInfo);
         } 
       }
+
+
       else if(choice == 11){
         // Call to share weather data
         System.out.print("Please enter the email address to share the weather data: ");
@@ -169,6 +190,8 @@ public class WeatherResearchApp{
         Location location = getCoordinatesFromZIP(zip);
         controller.shareWeatherData(email, location);
       }
+
+
       else if(choice == 12){
         // Call to see the current news
         System.out.print("Enter a ZIP code: ");
@@ -179,6 +202,8 @@ public class WeatherResearchApp{
             controller.getNewsByLocation(location);
         }
       }
+
+
       else if(choice == 13){
         // Create User Login
         System.out.print("Please enter a username: ");
@@ -203,6 +228,8 @@ public class WeatherResearchApp{
         }
         controller.createUser(username, password);
       }
+
+
       else if(choice == 14){
         // Call to login to user account
         System.out.print("Please enter your username: ");
@@ -211,12 +238,25 @@ public class WeatherResearchApp{
         String password = scan.nextLine().trim();
         controller.loginUser(username, password);
       }
+
+
       else if(choice == 15){
         // Call to manage user preferences
       }
+
+
       else if(choice == 16){
         // Call to suggest activites based on the weather
+        System.out.print("Enter a ZIP code: ");
+        String zip = scan.nextLine().trim();
+        Location location = getCoordinatesFromZIP(zip);
+        if (location != null) {
+            System.out.println("\nLocation: " + location);
+        }
+        System.out.println(controller.getSuggestedActivity(location));  
       }
+
+
       else if(choice == 17){
         // Call to unfavorite a location
         System.out.print("Enter your username: ");
@@ -241,18 +281,17 @@ public class WeatherResearchApp{
         if (location != null) {
           System.out.println("\nLocation: " + location);
           weatherInfo = controller.getWeatherByLocation(location);
-          // System.out.println(weatherInfo);
       }
 
         String[] parts = weatherInfo.split("=== Hourly Forecast ===");
-
+        
         if (parts.length > 1) {
             String hourlyForecast = parts[1].trim();
             System.out.println("Hourly Forecast:\n" + hourlyForecast);
-        } else {
-            System.out.println("Hourly forecast section not found.");
         }
       }
+
+
       else if(choice == 20){
         System.out.print("Enter a ZIP code for location 1: ");
         String zip1 = scan.nextLine().trim();
@@ -286,6 +325,9 @@ public class WeatherResearchApp{
     scan.close();
     System.out.println("Thank you!");
   }
+
+
+
   private static Location getCoordinatesFromZIP(String zip) {
     try {
         String url = NOMINATIM_BASE_URL + "?postalcode=" + URLEncoder.encode(zip, "UTF-8") + "&country=USA&format=json&addressdetails=1";
