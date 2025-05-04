@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DatabaseManager extends AbstractDatabaseManager{
   //uses SQLite operations for storing logs and preferences 
@@ -143,6 +145,21 @@ public class DatabaseManager extends AbstractDatabaseManager{
         }
       }
     
+      public Map<String, Integer> getObservationCountsByLocation(){
+        String sql = "SELECT location, COUNT(*) as count FROM logs GROUP BY location";
+        Map<String, Integer> observationCounts = new HashMap<>();
+        try (PreparedStatement pstmt = DatabaseHelper.getInstance().getConnection().prepareStatement(sql)) {
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                String location = rs.getString("location");
+                int count = rs.getInt("count");
+                observationCounts.put(location, count);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error getting observation counts: " + e.getMessage());
+        }
+        return observationCounts;
+      }
 }
 
 

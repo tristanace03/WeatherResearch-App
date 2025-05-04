@@ -2,6 +2,7 @@
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.json.JSONArray;
@@ -228,5 +229,19 @@ public String getMultidayForecast(Location location) {
     // Get the most recent observation for the location
     SQLiteDatabaseFactory dbFactory = new SQLiteDatabaseFactory();
     return dbFactory.createDatabaseManager("SQLLite").searchLogs(location.toString());
+  }
+
+  public void getHeatMap(){
+     SQLiteDatabaseFactory dbFactory = new SQLiteDatabaseFactory();
+     Map<String, Integer> heatmap = dbFactory.createDatabaseManager("SQLLite").getObservationCountsByLocation();
+     if (heatmap.isEmpty()) {
+        System.out.println("No observations logged yet.");
+        return;
+    }
+
+    System.out.println("=== Observation Heatmap (by Location) ===");
+    for (Map.Entry<String, Integer> entry : heatmap.entrySet()) {
+        System.out.println(entry.getKey() + ": " + entry.getValue() + " observations");
+    }
   }
 }

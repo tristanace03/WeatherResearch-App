@@ -164,5 +164,10 @@ public String getMultidayForecast(Location location) {
     newsService.getNewsByLocation(location);
   }
 
+  public void getHeatMap(){
+    WeatherService weatherService = new WeatherService(weatherSource, weatherDataFactory);
+    weatherService.getHeatMap();
+  }
+
 }
 

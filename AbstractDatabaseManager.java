@@ -1,4 +1,4 @@
-import java.sql.Date;
+import java.util.Map;
 
 public abstract class AbstractDatabaseManager {
     
@@ -10,4 +10,5 @@ public abstract class AbstractDatabaseManager {
     public abstract Observation searchLogs(String location);
     public abstract void exportToCSV();
     public abstract void saveUser(User user);
+    public abstract Map<String, Integer> getObservationCountsByLocation();
 }
