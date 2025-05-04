@@ -101,5 +101,41 @@ public class UserManager{
         User user = new User(username, password);
         dbManager.saveUser(user);
     }
+
+    // Add this method to UserManager.java
+public String getFavoriteLocation(String username) {
+    String sql = "SELECT location FROM favorites WHERE username = ?";
+    try (PreparedStatement pstmt = DatabaseHelper.getInstance().getConnection().prepareStatement(sql)) {
+        pstmt.setString(1, username);
+        ResultSet rs = pstmt.executeQuery();
+        if (rs.next()) {
+            return rs.getString("location");
+        }
+    } catch (SQLException e) {
+        System.out.println("Error retrieving favorite location: " + e.getMessage());
+    }
+    return null; // Return null if no favorite location is found
 }
+
+// Add this field and methods to manage logged-in users
+private String currentUsername = null;
+
+// Call this method to set the logged-in user
+public void setLoggedInUser(String username) {
+    currentUsername = username;
+}
+
+// Call this method to get the current logged-in user
+public String getCurrentUsername() {
+    return currentUsername;
+}
+
+// Call this method to check if a user is logged in
+public boolean isLoggedIn() {
+    return currentUsername != null;
+}
+
+}
+
+
 
