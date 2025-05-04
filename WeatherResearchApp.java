@@ -87,17 +87,26 @@ public class WeatherResearchApp{
         // Exit
         running = false;
       }
-      else if(choice==1){
-        System.out.print("Enter a ZIP code: ");
-        String zip = scan.nextLine().trim();
-        Location location = getCoordinatesFromZIP(zip);
-        if (location != null) {
-            System.out.println("\nLocation: " + location);
-            String weatherInfo = controller.getWeatherByLocation(location);
-            System.out.println(weatherInfo);
-        }
+        else if(choice == 1) {
+          String zip = null;
+          if (userManager.isLoggedIn()) {
+              String favoriteZip = userManager.getFavoriteLocation(userManager.getCurrentUsername());
+              if (favoriteZip != null) {
+                  zip = favoriteZip;
+                  System.out.println("Using your favorite location ZIP: " + zip);
+              }
+          }
+          if (zip == null) { // Prompt if no favorite location is set
+              System.out.print("Enter a ZIP code: ");
+              zip = scan.nextLine().trim();
+          }
+          Location location = getCoordinatesFromZIP(zip);
+          if (location != null) {
+              System.out.println("\nLocation: " + location);
+              String weatherInfo = controller.getWeatherByLocation(location);
+              System.out.println(weatherInfo);
+          }
       }
-
 
       else if(choice ==2){
         // Call for viewing Radar Visualization
@@ -132,16 +141,26 @@ public class WeatherResearchApp{
       }
 
 
-      else if(choice == 6){
-        System.out.print("Enter a ZIP code: ");
-        String zip = scan.nextLine().trim();
+      else if(choice == 6) {
+        String zip = null;
+        if (userManager.isLoggedIn()) {
+            String favoriteZip = userManager.getFavoriteLocation(userManager.getCurrentUsername());
+            if (favoriteZip != null) {
+                zip = favoriteZip;
+                System.out.println("Using your favorite location ZIP: " + zip);
+            }
+        }
+        if (zip == null) { // Prompt if no favorite location is set
+            System.out.print("Enter a ZIP code: ");
+            zip = scan.nextLine().trim();
+        }
         Location location = getCoordinatesFromZIP(zip);
         if (location != null) {
             System.out.println("\nLocation: " + location);
             String alertsInfo = controller.getAlerts(location);
             System.out.println(alertsInfo);
         }
-      }
+    }
 
 
       else if(choice == 7){
@@ -173,17 +192,26 @@ public class WeatherResearchApp{
       }
 
 
-      else if(choice == 10){
-       
-        System.out.print("Enter a ZIP code: ");
-        String zip = scan.nextLine().trim();
+      else if(choice == 10) {
+        String zip = null;
+        if (userManager.isLoggedIn()) {
+            String favoriteZip = userManager.getFavoriteLocation(userManager.getCurrentUsername());
+            if (favoriteZip != null) {
+                zip = favoriteZip;
+                System.out.println("Using your favorite location ZIP: " + zip);
+            }
+        }
+        if (zip == null) { // Prompt if no favorite location is set
+            System.out.print("Enter a ZIP code: ");
+            zip = scan.nextLine().trim();
+        }
         Location location = getCoordinatesFromZIP(zip);
         if (location != null) {
             System.out.println("\nLocation: " + location);
             String forecastInfo = controller.getMultidayForecast(location);
             System.out.println(forecastInfo);
-        } 
-      }
+        }
+    }
 
 
       else if(choice == 11){
@@ -277,24 +305,30 @@ public class WeatherResearchApp{
       else if(choice == 18){
         controller.getESPNScores();
       }
-      else if(choice == 19){
-        // Call to Retrieve Hourly Forecast
-        String weatherInfo = "";
-        System.out.print("Enter a ZIP code: ");
-        String zip = scan.nextLine().trim();
+      else if(choice == 19) {
+        String zip = null;
+        if (userManager.isLoggedIn()) {
+            String favoriteZip = userManager.getFavoriteLocation(userManager.getCurrentUsername());
+            if (favoriteZip != null) {
+                zip = favoriteZip;
+                System.out.println("Using your favorite location ZIP: " + zip);
+            }
+        }
+        if (zip == null) { // Prompt if no favorite location is set
+            System.out.print("Enter a ZIP code: ");
+            zip = scan.nextLine().trim();
+        }
         Location location = getCoordinatesFromZIP(zip);
         if (location != null) {
-          System.out.println("\nLocation: " + location);
-          weatherInfo = controller.getWeatherByLocation(location);
-      }
-
-        String[] parts = weatherInfo.split("=== Hourly Forecast ===");
-        
-        if (parts.length > 1) {
-            String hourlyForecast = parts[1].trim();
-            System.out.println("Hourly Forecast:\n" + hourlyForecast);
+            System.out.println("\nLocation: " + location);
+            String weatherInfo = controller.getWeatherByLocation(location);
+            String[] parts = weatherInfo.split("=== Hourly Forecast ===");
+            if (parts.length > 1) {
+                String hourlyForecast = parts[1].trim();
+                System.out.println("Hourly Forecast:\n" + hourlyForecast);
+            }
         }
-      }
+    }
 
 
       else if(choice == 20){

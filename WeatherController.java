@@ -133,13 +133,13 @@ public String getMultidayForecast(Location location) {
   }
 
   public void loginUser(String username, String password) {
-    if(userManager.login(username,password)){
-      System.out.println("Login successful!");
+    if (userManager.login(username, password)) {
+        userManager.setLoggedInUser(username); // Set the logged-in user
+        System.out.println("Login successful!");
+    } else {
+        System.out.println("Login failed. Please check your username and password.");
     }
-    else{
-      System.out.println("Login failed. Please check your username and password.");
-    }
-  }
+}
   
   public void createFavoriteLocation(String username, String location) {
     if(userManager.addFavoriteLocation(username, location)){
