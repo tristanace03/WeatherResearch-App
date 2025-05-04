@@ -43,14 +43,19 @@ public class UserManager{
    * 
    * @return boolean
    */
-  public boolean savePreferences(){
+  public boolean savePreferences(String username, String key, String value){
 
 
-    boolean saveSuccessful = false;
+   
+    SQLiteDatabaseFactory dbFactory = new SQLiteDatabaseFactory();
+    dbFactory.createDatabaseManager("SQLLite").savePreference(username, key, value);
 
-    //TODO
+    return true;
+  }
 
-    return saveSuccessful;
+  public String getPreferences(String username, String key){
+    SQLiteDatabaseFactory dbFactory = new SQLiteDatabaseFactory();
+    return dbFactory.createDatabaseManager("SQLLite").getPreference(username, key);
   }
 
   /**

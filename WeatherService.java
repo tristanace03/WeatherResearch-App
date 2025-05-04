@@ -221,6 +221,7 @@ public String getMultidayForecast(Location location) {
 
     DatabaseManager dbManager = new DatabaseManager();
     dbManager.logObservation(obs);
+    System.out.println("Observation saved: " + obs.toString());
   }
 
   public Observation getObservation(Location location) {

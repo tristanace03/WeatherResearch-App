@@ -165,6 +165,11 @@ public class WeatherResearchApp{
 
       else if(choice == 7){
         // Call to set weather preferences
+        System.out.print("Enter your username: ");
+        String username = scan.nextLine().trim();
+        System.out.print("Do you want °F or °C: (F/C) ");
+        String unit = scan.nextLine().trim();
+        controller.savePreferences(username, "unit", unit);
       }
 
 
@@ -270,8 +275,14 @@ public class WeatherResearchApp{
 
       else if(choice == 15){
         // Call to manage user preferences
+        System.out.print("Enter your username: ");
+        String username = scan.nextLine().trim();
+        System.out.print("Enter the preference you want to set (e.g., unit): ");
+        String preference = scan.nextLine().trim();
+        System.out.print("Enter the value for the preference: ");
+        String value = scan.nextLine().trim();
+        controller.savePreferences(username, preference, value);
       }
-
 
       else if(choice == 16){
         // Call to suggest activites based on the weather

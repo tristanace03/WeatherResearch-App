@@ -50,14 +50,20 @@ public String getMultidayForecast(Location location) {
     weatherService.saveObservation(location);
   }
 
-  // public queryObservations{
-  // }
+  public void savePreferences(String username, String key, String value){
+    userManager.savePreferences(username, key, value);
+    System.out.println("Preferences saved for " + key + " with value " + value);
+  }
 
-  // public saveUserPreferences{
-  // }
-
-  // public getUserPreferences{
-  // }
+  public void getPreferences(String username, String key){
+    String value = userManager.getPreferences(username, key);
+    if(value != null){
+      System.out.println("Preferences for " + key + " is " + value);
+    }
+    else{
+      System.out.println("No preferences found for " + key);
+    }
+  }
 
   public void shareWeatherData(String to, Location location) {
     WeatherService weatherService = new WeatherService(weatherSource, weatherDataFactory);
