@@ -5,6 +5,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.Scanner;
+import java.util.ResourceBundle.Control;
+
 import org.json.*;
 
 
@@ -124,6 +126,7 @@ public class WeatherResearchApp{
 
       else if(choice == 4){
         // Call to view Heat Map of Logbook Locations
+        controller.getHeatMap();
       }
 
 
