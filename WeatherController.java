@@ -31,10 +31,6 @@ public String getAlerts(Location location) {
     return weatherService.getSevereWeatherAlerts(location);
 }
 
-public String getMultidayForecast(Location location) {
-    WeatherService weatherService = new WeatherService(weatherSource, weatherDataFactory);
-    return weatherService.getMultidayForecast(location);
-}
 
   // public addObservation{
   // }
@@ -162,6 +158,55 @@ public String getMultidayForecast(Location location) {
     WeatherService weatherService = new WeatherService(weatherSource, weatherDataFactory);
     weatherService.getHeatMap();
   }
+  public String getMultidayForecast(Location location, int days) {
+    StringBuilder output = new StringBuilder();
+    WeatherDataSource.PointData pointData = weatherSource.getPointData(location);
 
+    if (pointData == null) {
+        return "Unable to fetch multiday forecast for this location.";
+    }
+
+    output.append("\n=== Multiday Forecast ===\n");
+    JSONArray dailyForecast = weatherSource.getDailyForecast(pointData.forecastUrl);
+
+    if (dailyForecast != null) {
+        for (int i = 0; i < Math.min(dailyForecast.length(), days); i++) {
+            JSONObject period = dailyForecast.getJSONObject(i);
+            WeatherData data = weatherDataFactory.createWeatherData(period, "daily");
+            output.append(data.getTime()).append(": ")
+                  .append(data.getDescription()).append("\n");
+        }
+    } else {
+        output.append("No multiday forecast available.\n");
+    }
+
+    return output.toString();
+}
+
+public String getHourlyForecast(Location location, int hours) {
+    StringBuilder output = new StringBuilder();
+    WeatherDataSource.PointData pointData = weatherSource.getPointData(location);
+
+    if (pointData == null) {
+        return "Unable to fetch hourly forecast for this location.";
+    }
+
+    output.append("\n=== Hourly Forecast ===\n");
+    JSONArray hourlyForecast = weatherSource.getHourlyForecast(pointData.hourlyForecastUrl);
+
+    if (hourlyForecast != null) {
+        for (int i = 0; i < Math.min(hourlyForecast.length(), hours); i++) {
+            JSONObject period = hourlyForecast.getJSONObject(i);
+            WeatherData data = weatherDataFactory.createWeatherData(period, "hourly");
+            output.append(data.getTime()).append(": ")
+                  .append(data.getTemperature()).append("°F, ")
+                  .append(data.getDescription()).append("\n");
+        }
+    } else {
+        output.append("No hourly forecast available.\n");
+    }
+
+    return output.toString();
+}
 }
 
