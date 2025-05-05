@@ -5,6 +5,9 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.Scanner;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.ResourceBundle.Control;
 
 import org.json.*;
@@ -155,17 +158,47 @@ while (!loggedIn) {
       }
         else if(choice == 1) {
           String zip = null;
+          String username = userManager.getCurrentUsername();
+
+          // Use favorite ZIP if set
           if (userManager.isLoggedIn()) {
-              String favoriteZip = userManager.getFavoriteLocation(userManager.getCurrentUsername());
+              String favoriteZip = userManager.getFavoriteLocation(username);
               if (favoriteZip != null) {
                   zip = favoriteZip;
                   System.out.println("Using your favorite location ZIP: " + zip);
               }
           }
-          if (zip == null) { // Prompt if no favorite location is set
+
+          if (zip == null) {
+              // Check if search history is enabled
+              String toggle = controller.getPreferences(username, "SearchHistoryEnabled");
+              boolean historyEnabled = "true".equalsIgnoreCase(toggle);
+
+              List<String> recentZips = new ArrayList<>();
+
+              if (historyEnabled) {
+                  String history = controller.getPreferences(username, "searchHistory");
+                  if (history != null && !history.isEmpty()) {
+                      recentZips = new ArrayList<>(Arrays.asList(history.split(",")));
+                      System.out.println("Recent ZIPs: " + String.join(", ", recentZips));
+                  }
+              }
+
               System.out.print("Enter a ZIP code: ");
               zip = scan.nextLine().trim();
+
+              // Save search history only if enabled
+              if (historyEnabled) {
+                  recentZips.remove(zip);
+                  recentZips.add(0, zip);
+                  if (recentZips.size() > 5) {
+                      recentZips = recentZips.subList(0, 5);
+                  }
+                  String updatedHistory = String.join(",", recentZips);
+                  controller.savePreferences(username, "searchHistory", updatedHistory);
+              }
           }
+
           Location location = getCoordinatesFromZIP(zip);
           if (location != null) {
               System.out.println("\nLocation: " + location);
@@ -231,7 +264,21 @@ while (!loggedIn) {
 
 
       else if(choice == 7){
-        System.out.print("done ");
+        // Call to set weather preferences
+        System.out.print("Do you want to have a search history? (yes/no): ");
+        String input = scan.nextLine().trim().toLowerCase();
+
+        String value;
+        if (input.equals("yes")) {
+            value = "true";
+        } else if (input.equals("no")) {
+            value = "false";
+        } else {
+            System.out.println("Invalid input. Please type 'yes' or 'no'.");
+            return;
+        }
+
+        controller.savePreferences(userManager.getCurrentUsername(), "SearchHistoryEnabled", value);
       }
 
 
