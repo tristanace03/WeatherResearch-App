@@ -22,3 +22,5 @@ public class RadarLinkGeneratorTest {
         );
     }
 }
+
+//this was created by David Arellano, but Tristan copied and pasted this to main. Proof that he completed this can be found in his branch. 
