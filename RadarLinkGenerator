@@ -1,0 +1,54 @@
+// david
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import org.json.JSONObject;
+
+public class RadarLinkGenerator {
+
+    public static void main(String[] args) {
+        try {
+            // detect lat/lon via public ip
+            String geoJson = httpGet("https://ipapi.co/json/");
+            JSONObject geo = new JSONObject(geoJson);
+            double lat = geo.getDouble("latitude");
+            double lon = geo.getDouble("longitude");
+            String city = geo.optString("city", "Unknown");
+
+            System.out.printf("detected: %s (lat=%.5f, lon=%.5f)%n", city, lat, lon);
+
+            // get nearest nws radar station
+            String ptsJson = httpGet(
+                    String.format("https://api.weather.gov/points/%.5f,%.5f", lat, lon));
+            JSONObject props = new JSONObject(ptsJson).getJSONObject("properties");
+            String station = props.getString("radarStation");
+
+            // build and print radar loop url
+            String radarUrl = "https://radar.weather.gov/ridge/standard/"
+                    + station + "_loop.gif";
+            System.out.println("radar url: " + radarUrl);
+
+        } catch (Exception e) {
+            System.err.println("error: " + e.getMessage());
+        }
+    }
+
+    // simple http get
+    private static String httpGet(String urlStr) throws Exception {
+        URL url = new URL(urlStr);
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setRequestMethod("GET");
+        con.setRequestProperty("User-Agent", "java-radar");
+
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) {
+                sb.append(line);
+            }
+            return sb.toString();
+        }
+    }
+}
