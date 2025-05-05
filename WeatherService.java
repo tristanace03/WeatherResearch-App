@@ -196,9 +196,9 @@ public String getMultidayForecast(Location location) {
     }
   }
 
-  public void saveObservation(Location location) {
-    // Get structured forecast text for the log
-    String notes = getWeatherByLocation(location);
+  public void saveObservation(Location location, String userNotes) {
+    // Use only the user-provided notes
+    String notes = (userNotes != null && !userNotes.isEmpty()) ? userNotes : "";
 
     // Get forecast point data
     WeatherDataSource.PointData pointData = weatherSource.getPointData(location);
@@ -212,7 +212,8 @@ public String getMultidayForecast(Location location) {
             temperature = data.getTemperature();
         }
     }
-    
+
+    // Create and save the observation
     Observation obs = new Observation(
         location.toString(),
         new java.sql.Date(System.currentTimeMillis()),
@@ -223,7 +224,7 @@ public String getMultidayForecast(Location location) {
     DatabaseManager dbManager = new DatabaseManager();
     dbManager.logObservation(obs);
     System.out.println("Observation saved: " + obs.toString());
-  }
+}
 
   public Observation getObservation(Location location) {
     // Get the most recent observation for the location

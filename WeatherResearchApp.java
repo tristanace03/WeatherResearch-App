@@ -212,13 +212,21 @@ while (!loggedIn) {
       }
 
 
-      else if(choice == 3){
+      else if (choice == 3) {
         // Call to log weather observations
         System.out.print("Enter a ZIP code: ");
         String zip = scan.nextLine().trim();
+    
+        // Get the location based on the ZIP code
         Location location = getCoordinatesFromZIP(zip);
-        controller.saveObservation(location);
-      }
+    
+        // Prompt the user for optional notes
+        System.out.print("Enter notes about this observation (optional): ");
+        String notes = scan.nextLine();
+    
+        // Save the observation with location and notes
+        controller.saveObservation(location, notes);
+    }
 
 
       else if(choice == 4){

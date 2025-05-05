@@ -41,9 +41,9 @@ public String getAlerts(Location location) {
     System.out.println(observation);
   }
 
-  public void saveObservation(Location location){
+  public void saveObservation(Location location, String notes){
     WeatherService weatherService = new WeatherService(weatherSource, weatherDataFactory);
-    weatherService.saveObservation(location);
+    weatherService.saveObservation(location, notes);
   }
 
   public void savePreferences(String username, String key, String value){
