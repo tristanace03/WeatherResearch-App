@@ -34,6 +34,70 @@ public class WeatherResearchApp{
             WeatherDataSource weatherSource = WeatherDataSourceFactory.createWeatherDataSource("NOAA");
             WeatherController controller = new WeatherController(dbManager, userManager, espnScores, weatherSource, activities);
     Scanner scan = new Scanner(System.in);
+   
+    boolean loggedIn = false;
+
+while (!loggedIn) {
+    System.out.println("Welcome to Weather Research App!");
+    System.out.println("1: Log In");
+    System.out.println("2: Create an Account");
+    System.out.print("Choose an option: ");
+
+    // Validate input to ensure it's an integer
+    if (scan.hasNextInt()) {
+        int choice = scan.nextInt();
+        scan.nextLine(); // Consume newline
+
+        switch (choice) {
+            case 1: // Login
+                System.out.print("Enter username: ");
+                String username = scan.nextLine();
+                System.out.print("Enter password: ");
+                String password = scan.nextLine();
+                if (userManager.login(username, password)) {
+                    userManager.setLoggedInUser(username);
+                    loggedIn = true;
+                    System.out.println("Login successful!");
+                } else {
+                    System.out.println("Invalid credentials. Please try again.");
+                }
+                break;
+
+            case 2: // Create account
+                System.out.print("Choose a username: ");
+                String newUsername = scan.nextLine();
+                System.out.print("Choose a password: ");
+                String newPassword = scan.nextLine();
+                userManager.createUser(newUsername, newPassword);
+
+                System.out.println("Account created successfully! Now, set your forecast preferences.");
+
+                // Prompt user for multiday forecast preference
+                System.out.print("Enter the number of days for multiday forecasts (e.g., 3): ");
+                int multidayDays = scan.nextInt();
+                scan.nextLine(); // Consume newline
+
+                // Prompt user for hourly forecast preference
+                System.out.print("Enter the number of hours for hourly forecasts (e.g., 12): ");
+                int hourlyHours = scan.nextInt();
+                scan.nextLine(); // Consume newline
+
+                // Save user preferences
+                userManager.savePreferences(newUsername, "multiday_forecast_days", String.valueOf(multidayDays));
+                userManager.savePreferences(newUsername, "hourly_forecast_hours", String.valueOf(hourlyHours));
+
+                System.out.println("Preferences saved successfully! Please log in.");
+                break;
+
+            default:
+                System.out.println("Invalid option. Please choose 1 or 2.");
+        }
+    } else {
+        // Handle invalid (non-integer) input
+        String invalidInput = scan.next(); // Consume the invalid input
+        System.out.println("\"" + invalidInput + "\" is not a valid option. Please enter 1 or 2.");
+    }
+}
 
     boolean running = true;
     int choice = -1;
@@ -241,38 +305,12 @@ public class WeatherResearchApp{
 
 
       else if(choice == 13){
-        // Create User Login
-        System.out.print("Please enter a username: ");
-        String username = scan.nextLine().trim();
-        String password = "";
-        String password2 = "";
-
-        while (true) {
-            System.out.print("Please enter a password: ");
-            password = scan.nextLine().trim();
-
-            System.out.print("Please enter the password again: ");
-            password2 = scan.nextLine().trim();
-
-            if (password.isEmpty() || password2.isEmpty()) {
-                System.out.println("Password cannot be empty. Please try again.");
-            } else if (!password.equals(password2)) {
-                System.out.println("Passwords do not match. Please try again.");
-            } else {
-                break;  // Passwords match and are not empty
-            }
-        }
-        controller.createUser(username, password);
+        System.out.print("done ");
       }
 
 
       else if(choice == 14){
-        // Call to login to user account
-        System.out.print("Please enter your username: ");
-        String username = scan.nextLine().trim();
-        System.out.print("Please enter your password: ");
-        String password = scan.nextLine().trim();
-        controller.loginUser(username, password);
+        System.out.print("done ");
       }
 
 
