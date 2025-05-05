@@ -55,15 +55,9 @@ public String getMultidayForecast(Location location) {
     System.out.println("Preferences saved for " + key + " with value " + value);
   }
 
-  public void getPreferences(String username, String key){
-    String value = userManager.getPreferences(username, key);
-    if(value != null){
-      System.out.println("Preferences for " + key + " is " + value);
-    }
-    else{
-      System.out.println("No preferences found for " + key);
-    }
-  }
+  public String getPreferences(String username, String key) {
+    return userManager.getPreferences(username, key);
+}
 
   public void shareWeatherData(String to, Location location) {
     WeatherService weatherService = new WeatherService(weatherSource, weatherDataFactory);
