@@ -15,19 +15,17 @@ public class RadarLinkGenerator {
             JSONObject geo = new JSONObject(geoJson);
             double lat = geo.getDouble("latitude");
             double lon = geo.getDouble("longitude");
-            String city = geo.optString("city", "Unknown");
+            String city = geo.optString("city", "unknown");
 
             System.out.printf("detected: %s (lat=%.5f, lon=%.5f)%n", city, lat, lon);
 
-            // get nearest nws radar station
+            // lookup nearest nws station and build url
             String ptsJson = httpGet(
-                    String.format("https://api.weather.gov/points/%.5f,%.5f", lat, lon));
-            JSONObject props = new JSONObject(ptsJson).getJSONObject("properties");
-            String station = props.getString("radarStation");
+                String.format("https://api.weather.gov/points/%.5f,%.5f", lat, lon)
+            );
+            String radarUrl = buildRadarUrl(ptsJson);
 
-            // build and print radar loop url
-            String radarUrl = "https://radar.weather.gov/ridge/standard/"
-                    + station + "_loop.gif";
+            // print radar loop url
             System.out.println("radar url: " + radarUrl);
 
         } catch (Exception e) {
@@ -50,5 +48,14 @@ public class RadarLinkGenerator {
             }
             return sb.toString();
         }
+    }
+
+    // parse points json and build radar .gif url
+    public static String buildRadarUrl(String ptsJson) {
+        var props   = new JSONObject(ptsJson).getJSONObject("properties");
+        var station = props.getString("radarStation");
+        return "https://radar.weather.gov/ridge/standard/"
+             + station
+             + "_loop.gif";
     }
 }
