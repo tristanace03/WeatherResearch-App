@@ -1,3 +1,11 @@
+/**
+ * Class that implements the WeatherDataSource interface to fetch weather data from the NOAA API.
+ * 
+ * Retrieves point data, daily and hourly forecasts, alerts, fire weather warnings, and marine forecasts.
+ * Connects to the NOAA's NWS API endpoints
+ * Parses the JSON response to extract relevant information.
+ * 
+ */
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -5,9 +13,18 @@ import java.net.URL;
 import org.json.*;
 
 public class NOAASource implements WeatherDataSource {
+
     private static final String NWS_BASE_URL = "https://api.weather.gov";
     private static final String USER_AGENT = "WeatherResearchApp/1.0 (tristanace2@gmail.com)";
 
+    /**
+     * Retrieves point-specific data for a given location
+     * 
+     * Includes forecast URLs, alerts, and marine zone information
+     * 
+     * @param location the location for which to retrieve point data
+     * @return PointData object containing forecast URLs and other information
+     */
     @Override
     public PointData getPointData(Location location) {
         try {
@@ -31,6 +48,12 @@ public class NOAASource implements WeatherDataSource {
         }
     }
 
+    /**
+     * Fetches the daily weather forecast from a given forecast URL.
+     * 
+     * @param forecastUrl the URL for the daily forecast
+     * @return JSONArray containing the daily forecast data
+     */
     @Override
     public JSONArray getDailyForecast(String forecastUrl) {
         try {
@@ -42,6 +65,12 @@ public class NOAASource implements WeatherDataSource {
         }
     }
 
+    /**
+     * Fetches the hourly weather forecast from a given hourly forecast URL.
+     * 
+     * @param hourlyForecastUrl the URL for the hourly forecast
+     * @return JSONArray containing the hourly forecast data
+     */
     @Override
     public JSONArray getHourlyForecast(String hourlyForecastUrl) {
         try {
@@ -53,6 +82,12 @@ public class NOAASource implements WeatherDataSource {
         }
     }
 
+    /**
+     * Fetches active weather alerts from a given alerts URL.
+     * 
+     * @param alertsUrl the URL for the active alerts
+     * @return JSONArray containing the active alerts data
+     */
     @Override
     public JSONArray getAlerts(String alertsUrl) {
         try {
@@ -64,6 +99,12 @@ public class NOAASource implements WeatherDataSource {
         }
     }
 
+    /**
+     * Fetches fire weather warnings from a given fire weather URL.
+     * 
+     * @param fireWeatherUrl the URL for the fire weather warnings
+     * @return JSONArray containing the fire weather warnings data
+     */
     @Override
     public JSONArray getFireWeather(String fireWeatherUrl) {
         try {
@@ -75,6 +116,12 @@ public class NOAASource implements WeatherDataSource {
         }
     }
 
+    /**
+     * Fetches marine forecasts for a given marine zone.
+     * 
+     * @param marineZone the marine zone for which to fetch the forecast
+     * @return JSONArray containing the marine forecast data
+     */
     @Override
     public JSONArray getMarineForecast(String marineZone) {
         try {
@@ -87,10 +134,21 @@ public class NOAASource implements WeatherDataSource {
         }
     }
 
+    /**
+     * Fetches JSON data from a given URL.
+     * 
+     * @param url
+     * @return JSONObject containing the JSON data
+     */
     private JSONObject getJson(String url) throws Exception {
         return new JSONObject(getString(url));
     }
 
+    /**
+     * Fetches a string from a given URL.
+     * @param urlStr the URL to fetch data from
+     * @return a String containing response data
+     */
     private String getString(String urlStr) throws Exception {
         HttpURLConnection conn = (HttpURLConnection) new URL(urlStr).openConnection();
         conn.setRequestProperty("User-Agent", USER_AGENT);

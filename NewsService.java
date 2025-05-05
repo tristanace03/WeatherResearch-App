@@ -1,3 +1,11 @@
+/**
+ * A class that fetches news articles based on a given location using the NewsData API.
+ * 
+ * Connects to the NewsData API, retrieves news articles for a specified location, and parses the JSON response to display article titles, summaries, and URLs.
+ * 
+ * Used by other parts of the application to fetch and display news articles based on user location.
+ */
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
@@ -6,9 +14,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class NewsService {
+
     private static final String API_KEY = "pub_84434af38f457a60c8b78cf845a3afab540c9";
     private static final String BASE_URL = "https://newsdata.io/api/1/latest";
 
+    /**
+     * Fetches news articles for a specified location using the NewsData API.
+     * 
+     * Connects to the NewsData API, retrieves news articles for a specified location, and parses the JSON response to display the top 5 article titles, summaries, and URLs.
+     * 
+     * @param location the location for which to fetch news articles
+     */
     public void getNewsByLocation(Location location) {
         try{
             String locationQuery = location.getTown() + "," + location.getState();
@@ -43,6 +59,4 @@ public class NewsService {
             System.out.println("Error retrieving news: " + e.getMessage());
         }
     }
-
-       
 }
