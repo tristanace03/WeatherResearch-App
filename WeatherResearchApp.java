@@ -73,12 +73,12 @@ while (!loggedIn) {
                 System.out.println("Account created successfully! Now, set your forecast preferences.");
 
                 // Prompt user for multiday forecast preference
-                System.out.print("Enter the number of days for multiday forecasts (e.g., 3): ");
+                System.out.print("Enter the number of instances you'd like to see for multiday forecasts (ex. Monday, Monday Night, Tuesday...)(Max: 14 days): ");
                 int multidayDays = scan.nextInt();
                 scan.nextLine(); // Consume newline
 
                 // Prompt user for hourly forecast preference
-                System.out.print("Enter the number of hours for hourly forecasts (e.g., 12): ");
+                System.out.print("Enter the number of hours for hourly forecasts (ex. 21:00, 22:00, 23:00...)(Max: 120 hours): ");
                 int hourlyHours = scan.nextInt();
                 scan.nextLine(); // Consume newline
 
@@ -231,12 +231,7 @@ while (!loggedIn) {
 
 
       else if(choice == 7){
-        // Call to set weather preferences
-        System.out.print("Enter your username: ");
-        String username = scan.nextLine().trim();
-        System.out.print("Do you want °F or °C: (F/C) ");
-        String unit = scan.nextLine().trim();
-        controller.savePreferences(username, "unit", unit);
+        System.out.print("done ");
       }
 
 
@@ -259,7 +254,7 @@ while (!loggedIn) {
       }
 
 
-      else if(choice == 10) {
+      else if (choice == 10) {
         String zip = null;
         if (userManager.isLoggedIn()) {
             String favoriteZip = userManager.getFavoriteLocation(userManager.getCurrentUsername());
@@ -272,10 +267,14 @@ while (!loggedIn) {
             System.out.print("Enter a ZIP code: ");
             zip = scan.nextLine().trim();
         }
+    
         Location location = getCoordinatesFromZIP(zip);
         if (location != null) {
             System.out.println("\nLocation: " + location);
-            String forecastInfo = controller.getMultidayForecast(location);
+    
+            // Get the number of days for the forecast from user preferences
+            int days = Integer.parseInt(userManager.getPreferences(userManager.getCurrentUsername(), "multiday_forecast_days"));
+            String forecastInfo = controller.getMultidayForecast(location, days);
             System.out.println(forecastInfo);
         }
     }
@@ -314,16 +313,50 @@ while (!loggedIn) {
       }
 
 
-      else if(choice == 15){
-        // Call to manage user preferences
+      else if (choice == 15) {
+        // Manage user preferences
         System.out.print("Enter your username: ");
         String username = scan.nextLine().trim();
-        System.out.print("Enter the preference you want to set (e.g., unit): ");
-        String preference = scan.nextLine().trim();
-        System.out.print("Enter the value for the preference: ");
-        String value = scan.nextLine().trim();
-        controller.savePreferences(username, preference, value);
-      }
+    
+        if (!userManager.isLoggedIn() || !userManager.getCurrentUsername().equals(username)) {
+            System.out.println("You are not logged in as this user. Please log in first.");
+            continue;
+        }
+    
+        System.out.println("Manage Preferences:");
+        System.out.println("1: Change the number of days for multiday forecasts");
+        System.out.println("2: Change the number of hours for hourly forecasts");
+        System.out.print("Choose an option (1 or 2): ");
+    
+        if (scan.hasNextInt()) {
+            int preferenceChoice = scan.nextInt();
+            scan.nextLine(); // Consume newline
+    
+            switch (preferenceChoice) {
+                case 1: // Change multiday forecast days
+                    System.out.print("Enter the new number of days for multiday forecasts (e.g., 3): ");
+                    int newDays = scan.nextInt();
+                    scan.nextLine(); // Consume newline
+                    userManager.savePreferences(username, "multiday_forecast_days", String.valueOf(newDays));
+                    System.out.println("Multiday forecast preference updated successfully!");
+                    break;
+    
+                case 2: // Change hourly forecast hours
+                    System.out.print("Enter the new number of hours for hourly forecasts (e.g., 12): ");
+                    int newHours = scan.nextInt();
+                    scan.nextLine(); // Consume newline
+                    userManager.savePreferences(username, "hourly_forecast_hours", String.valueOf(newHours));
+                    System.out.println("Hourly forecast preference updated successfully!");
+                    break;
+    
+                default:
+                    System.out.println("Invalid choice. Please choose 1 or 2.");
+            }
+        } else {
+            String invalidInput = scan.next(); // Consume invalid input
+            System.out.println("\"" + invalidInput + "\" is not a valid option. Please enter 1 or 2.");
+        }
+    }
 
       else if(choice == 16){
         // Call to suggest activites based on the weather
@@ -352,7 +385,7 @@ while (!loggedIn) {
       else if(choice == 18){
         controller.getESPNScores();
       }
-      else if(choice == 19) {
+      else if (choice == 19) {
         String zip = null;
         if (userManager.isLoggedIn()) {
             String favoriteZip = userManager.getFavoriteLocation(userManager.getCurrentUsername());
@@ -365,15 +398,15 @@ while (!loggedIn) {
             System.out.print("Enter a ZIP code: ");
             zip = scan.nextLine().trim();
         }
+    
         Location location = getCoordinatesFromZIP(zip);
         if (location != null) {
             System.out.println("\nLocation: " + location);
-            String weatherInfo = controller.getWeatherByLocation(location);
-            String[] parts = weatherInfo.split("=== Hourly Forecast ===");
-            if (parts.length > 1) {
-                String hourlyForecast = parts[1].trim();
-                System.out.println("Hourly Forecast:\n" + hourlyForecast);
-            }
+    
+            // Get the number of hours for the forecast from user preferences
+            int hours = Integer.parseInt(userManager.getPreferences(userManager.getCurrentUsername(), "hourly_forecast_hours"));
+            String forecastInfo = controller.getHourlyForecast(location, hours);
+            System.out.println(forecastInfo);
         }
     }
 
