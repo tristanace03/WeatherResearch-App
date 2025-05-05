@@ -7,7 +7,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-
 public class ESPNScores {
     public void getScores(String sport, String league) {
         String urlString = "https://site.api.espn.com/apis/site/v2/sports/" + sport + "/" + league + "/scoreboard";
@@ -27,7 +26,6 @@ public class ESPNScores {
             }
             in.close();
 
-            
             // Parse the JSON response
             JsonElement jsonElement = JsonParser.parseString(response.toString());
             JsonObject jsonObject = jsonElement.getAsJsonObject();

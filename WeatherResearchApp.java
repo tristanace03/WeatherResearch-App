@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle.Control;
-
 import org.json.*;
-
 
 public class WeatherResearchApp{
   //main class for application
@@ -22,34 +20,31 @@ public class WeatherResearchApp{
     run();
   }
 
-
   /*
    * Method to run the Weather App
    */
   public static void run(){
 
-    //WeatherController controller = new WeatherController(new DatabaseManager(), new UserManager(), new ESPNScores());
     SQLiteDatabaseFactory dbFactory = new SQLiteDatabaseFactory();
-            DatabaseManager dbManager = (DatabaseManager) dbFactory.createDatabaseManager("SQLite");
-            UserManager userManager = new UserManager();
-            ESPNScores espnScores = new ESPNScores();
-            SuggestActivities activities = new SuggestActivities();
-            WeatherDataSource weatherSource = WeatherDataSourceFactory.createWeatherDataSource("NOAA");
-            WeatherController controller = new WeatherController(dbManager, userManager, espnScores, weatherSource, activities);
+    DatabaseManager dbManager = (DatabaseManager) dbFactory.createDatabaseManager("SQLite");
+    UserManager userManager = new UserManager();
+    ESPNScores espnScores = new ESPNScores();
+    SuggestActivities activities = new SuggestActivities();
+    WeatherDataSource weatherSource = WeatherDataSourceFactory.createWeatherDataSource("NOAA");
+    WeatherController controller = new WeatherController(dbManager, userManager, espnScores, weatherSource, activities);
     Scanner scan = new Scanner(System.in);
    
     boolean loggedIn = false;
 
-while (!loggedIn) {
+  while (!loggedIn) {
     System.out.println("Welcome to Weather Research App!");
     System.out.println("1: Log In");
     System.out.println("2: Create an Account");
     System.out.print("Choose an option: ");
 
-    // Validate input to ensure it's an integer
     if (scan.hasNextInt()) {
         int choice = scan.nextInt();
-        scan.nextLine(); // Consume newline
+        scan.nextLine(); 
 
         switch (choice) {
             case 1: // Login
@@ -78,12 +73,12 @@ while (!loggedIn) {
                 // Prompt user for multiday forecast preference
                 System.out.print("Enter the number of instances you'd like to see for multiday forecasts (ex. Monday, Monday Night, Tuesday...)(Max: 14 days): ");
                 int multidayDays = scan.nextInt();
-                scan.nextLine(); // Consume newline
+                scan.nextLine(); 
 
                 // Prompt user for hourly forecast preference
                 System.out.print("Enter the number of hours for hourly forecasts (ex. 21:00, 22:00, 23:00...)(Max: 120 hours): ");
                 int hourlyHours = scan.nextInt();
-                scan.nextLine(); // Consume newline
+                scan.nextLine(); 
 
                 // Save user preferences
                 userManager.savePreferences(newUsername, "multiday_forecast_days", String.valueOf(multidayDays));
@@ -96,8 +91,7 @@ while (!loggedIn) {
                 System.out.println("Invalid option. Please choose 1 or 2.");
         }
     } else {
-        // Handle invalid (non-integer) input
-        String invalidInput = scan.next(); // Consume the invalid input
+        String invalidInput = scan.next(); 
         System.out.println("\"" + invalidInput + "\" is not a valid option. Please enter 1 or 2.");
     }
 }
@@ -124,16 +118,12 @@ while (!loggedIn) {
       "10: View Multiday forecast\n" +
       "11: Share Weather Data\n" +
       "12: View The Current news based on a location\n" +
-      "13: Create User Login\n" +
-      "14: Login into your account\n" +
-      "15: Manage Weather Preferences\n" +
-      "16: Suggest Activites based on the weather\n" +
-      "17: Unfavorite a Location\n" +
-      "18: View ESPN Scores\n" +
-      "19: View Hourly Forecast\n" +
-      "20: Compare the Weather of Two Locations");
-
-      // System.out.print("Please enter a number for the choice you want: ");
+      "13: Manage Weather Preferences\n" +
+      "14: Suggest Activites based on the weather\n" +
+      "15: Unfavorite a Location\n" +
+      "16: View ESPN Scores\n" +
+      "17: View Hourly Forecast\n" +
+      "18: Compare the Weather of Two Locations");
 
       while(choice < 0 || choice > 20){
         System.out.print("Please enter a number between 0 and 20: ");
@@ -151,7 +141,7 @@ while (!loggedIn) {
           System.out.println(invalid + " is not a valid input");
         }
       }
-      scan.nextLine(); // Clear newline after nextInt()
+      scan.nextLine(); 
       if(choice ==0){
         // Exit
         running = false;
@@ -340,7 +330,7 @@ while (!loggedIn) {
       else if(choice == 11){
         // Call to share weather data
         System.out.print("Please enter the email address to share the weather data: ");
-        String email = scan.next();
+        String email = scan.nextLine();
         System.out.print("Enter a ZIP code of location to share: ");
         String zip = scan.nextLine().trim();
         Location location = getCoordinatesFromZIP(zip);
@@ -360,17 +350,7 @@ while (!loggedIn) {
       }
 
 
-      else if(choice == 13){
-        System.out.print("done ");
-      }
-
-
-      else if(choice == 14){
-        System.out.print("done ");
-      }
-
-
-      else if (choice == 15) {
+      else if (choice == 13) {
         // Manage user preferences
         System.out.print("Enter your username: ");
         String username = scan.nextLine().trim();
@@ -415,7 +395,7 @@ while (!loggedIn) {
         }
     }
 
-      else if(choice == 16){
+      else if(choice == 14){
         // Call to suggest activites based on the weather
         System.out.print("Enter a ZIP code: ");
         String zip = scan.nextLine().trim();
@@ -427,7 +407,7 @@ while (!loggedIn) {
       }
 
 
-      else if(choice == 17){
+      else if(choice == 15){
         // Call to unfavorite a location
         System.out.print("Enter your username: ");
         String username = scan.nextLine().trim();
@@ -439,10 +419,10 @@ while (!loggedIn) {
             controller.removeFavoriteLocation(username, zip);
         }
       }
-      else if(choice == 18){
+      else if(choice == 16){
         controller.getESPNScores();
       }
-      else if (choice == 19) {
+      else if (choice == 17) {
         String zip = null;
         if (userManager.isLoggedIn()) {
             String favoriteZip = userManager.getFavoriteLocation(userManager.getCurrentUsername());
@@ -468,7 +448,7 @@ while (!loggedIn) {
     }
 
 
-      else if(choice == 20){
+      else if(choice == 18){
         System.out.print("Enter a ZIP code for location 1: ");
         String zip1 = scan.nextLine().trim();
         Location location1 = getCoordinatesFromZIP(zip1);

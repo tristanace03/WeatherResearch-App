@@ -2,7 +2,6 @@ import java.sql.*;
 
 public class DatabaseHelper extends AbstractDatabaseHelper{
     private static final String DB_URL = "jdbc:sqlite:weatherApp.db";
-
     private static DatabaseHelper instance = null;
 
     public static DatabaseHelper getInstance() {

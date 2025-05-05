@@ -72,8 +72,6 @@ public class DatabaseManager extends AbstractDatabaseManager{
         }
     }
 
-
-
     /*
      * Method to search the logbook entries
      */
