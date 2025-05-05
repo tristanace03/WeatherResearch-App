@@ -209,6 +209,8 @@ while (!loggedIn) {
 
       else if(choice ==2){
         // Call for viewing Radar Visualization
+        RadarLinkGenerator.main(new String[] {});
+  
       }
 
 
