@@ -1,20 +1,41 @@
+/**
+ * A helepr class for managing SQLite database connections and operations.
+ * Extends the AbstractDatabaseHelper class to implement specific logic for connecting to
+ * and initializing the SQLite database.
+ * 
+ * Implements methods to connect to the database, initialize tables, and disconnect from the database.
+ * Creates necessary tables for storing logs, user preferences, and user information.
+ * Follows the Singleton design pattern to ensure only one instance of the database helper exists.
+ * 
+ * Used by classes such as DatabaseManager to perform database operations.
+ */
 import java.sql.*;
 
 public class DatabaseHelper extends AbstractDatabaseHelper{
-    private static final String DB_URL = "jdbc:sqlite:weatherApp.db";
-    private static DatabaseHelper instance = null;
 
-    public static DatabaseHelper getInstance() {
-        if (instance == null) {
-            instance = new DatabaseHelper();
-            instance.connect();
-            instance.initializeDatabase();  
-        }
-        return instance;
-    }
-  /*
-   * Create a connection the the database
+  private static final String DB_URL = "jdbc:sqlite:weatherApp.db";
+  private static DatabaseHelper instance = null;
+
+  /**
+   * Provides the current database connection instance.
+   * 
+   * @return active database connection, or null if not connected. 
    */
+  public static DatabaseHelper getInstance() {
+    if (instance == null) {
+      instance = new DatabaseHelper();
+      instance.connect();
+      instance.initializeDatabase();  
+    }
+    return instance;
+  }
+  
+  /**
+   * Establishes a connection to the SQLite database.
+   * 
+   *  @return true if the connection is successful, false otherwise
+   */
+  @Override
   protected boolean connect(){
     try {
       connection =  DriverManager.getConnection(DB_URL);
@@ -27,8 +48,9 @@ public class DatabaseHelper extends AbstractDatabaseHelper{
   }
 
   /*
-   * Intialize the SQL database using Statements and the Connection we created
+   * Initializes the database by creating necessary tables if they do not exist.
    */
+  @Override
   protected void initializeDatabase() {
     String logsTable = "CREATE TABLE IF NOT EXISTS logs (" +
                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
@@ -63,6 +85,11 @@ public class DatabaseHelper extends AbstractDatabaseHelper{
     }
   }
 
+  /**
+   * Disconnects from the SQLite database.
+   * 
+   * @return true if disconnection is successful, false otherwise
+   */
   @Override
   protected boolean disconnect() {
 
@@ -78,6 +105,11 @@ public class DatabaseHelper extends AbstractDatabaseHelper{
     
   }
 
+  /**
+   * Returns the current database connection.
+   * 
+   * @return the active database connection, or null if not connected
+   */
   @Override
   public Connection getConnection() {
     return connection;

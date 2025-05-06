@@ -1,8 +1,23 @@
+/**
+ * A utility class that suggests activities based on weather forecasts
+ * 
+ * Parses weather forecast text to extract temperature and rain chance.
+ * Suggests indoor or outdoor activities based on these weather conditions.
+ * Handles various edge cases, including missing or invalid forecast data.
+ * 
+ * Class is designed to provide personalized activity recommendations based on hourly weather forecasts.
+ */
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SuggestActivities {
 
+    /**
+     * Suggests an activity based on the provided hourly forecast.
+     * 
+     * @param hourlyForecastText the hourly forecast text, which includes temperature and the percentage of rain likelihood.
+     * @return a string containing the suggested acctivity, or an error message if forecast data is invalid or unavailable. 
+     */
     public static String suggestActivityFromForecast(String hourlyForecastText) {
         if (hourlyForecastText == null || hourlyForecastText.isEmpty()) {
             return "No forecast available";

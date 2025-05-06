@@ -1,6 +1,23 @@
+/**
+ * A factory class for cerating WeatherData objects from JSON data
+ * 
+ * Parses JSON data to extract relevant weather attributes
+ * Supports multiple types of weather data, including daily, hourly, marine and alerts
+ * Encapsulates the logic for handling different weather data formats
+ * 
+ * This class acts as a centralized factory for creating WeatherData instances
+ */
 import org.json.JSONObject;
 
 public class WeatherDataFactory {
+
+    /**
+     * Creates a WeatherData object based on the provided JSON data and type
+     * 
+     * @param json the JSON object containing weather data
+     * @param type the type of weather data (daily, hourly, etc.)
+     * @return a WeatherData object constructed from JSON data
+     */
     public WeatherData createWeatherData(JSONObject json, String type) {
         String time;
         int temperature = 0;

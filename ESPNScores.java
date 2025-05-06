@@ -1,3 +1,11 @@
+/**
+ * A class to fetch and display live sports scores from ESPN's API.
+ * Rrtrieves scores for a specified sport and league, parases the data to display team names and scores.
+ * 
+ * Connects to the ESPN API, retrieves live scores for a specified sport and league, and parses the JSON response to display team names and scores.
+ * 
+ * Used by other parts of the application to fetch and display live sports scores.
+ */
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -8,24 +16,27 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class ESPNScores {
+
+    /**
+     * Fetches live scores for a specified sport and league from ESPN's API.
+     * 
+     * @param sport the type of sport 
+     * @param league the league of the sport
+     */
     public void getScores(String sport, String league) {
         String urlString = "https://site.api.espn.com/apis/site/v2/sports/" + sport + "/" + league + "/scoreboard";
         try {
-            // Connect to the ESPN API
             URL url = new URL(urlString);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
-
             // Read the response
             BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
             String inputLine;
             StringBuilder response = new StringBuilder();
-
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
             }
             in.close();
-
             // Parse the JSON response
             JsonElement jsonElement = JsonParser.parseString(response.toString());
             JsonObject jsonObject = jsonElement.getAsJsonObject();
@@ -64,7 +75,6 @@ public class ESPNScores {
                             awayScore = score;
                         }
                     }
-                
                     System.out.println(awayTeam + " " + awayScore + " @ " + homeTeam + " " + homeScore);
                 }
             }                
