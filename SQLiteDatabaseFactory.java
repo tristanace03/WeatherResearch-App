@@ -1,9 +1,19 @@
-
+/**
+ * A factory class for creating instances of database managers, specifically for SQLite databases.
+ * 
+ * Encapsulates the logic fore creating database manager instances based on the specified type.
+ * Currently supports SQLite database managemenet through DatabaseManager.
+ * 
+ * Follows Factory design pattern to abstract the creation of database managers.
+ */
 public class SQLiteDatabaseFactory{
 
-    // Factory class to create SQLite database manager instances
-    // This class is responsible for creating instances of the database manager based on the type of database required.
-    
+    /**
+     * Creates and returns an instanec of a databse manager based on the specified type
+     * 
+     * @param type the type of database manager to create
+     * @return an AbstractDatabaseManager instance for the specified type (or null if type is unsupported)
+     */
     public AbstractDatabaseManager createDatabaseManager(String type) {
         if ("SQLLite".equalsIgnoreCase(type))
             return new DatabaseManager();
